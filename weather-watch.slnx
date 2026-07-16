@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WeatherWatch.Api/WeatherWatch.Api.csproj" />
+    <Project Path="src/WeatherWatch.Application/WeatherWatch.Application.csproj" />
+    <Project Path="src/WeatherWatch.Infrastructure/WeatherWatch.Infrastructure.csproj" />
+  </Folder>
+</Solution>
