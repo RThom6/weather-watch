@@ -89,3 +89,4 @@ vite.config.ts.timestamp-*
 test-results
 
 */appsettings.*
+*.DotSettings.user

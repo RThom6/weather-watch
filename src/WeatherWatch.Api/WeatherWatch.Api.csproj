@@ -22,8 +22,4 @@
       <ProjectReference Include="..\WeatherWatch.Infrastructure\WeatherWatch.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Endpoints\" />
-    </ItemGroup>
-
 </Project>
