@@ -12,12 +12,14 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
     public async Task<IReadOnlyList<DailyForecast>> GetForecastAsync(
         double latitude,
         double longitude,
+        string? mode = "json",
+        string? units = "metric",
         CancellationToken cancellationToken = default)
     {
-        var uri = $"weather?lat={latitude}&lon={longitude}&appid={_options.ApiKey}";
+        var uri = $"weather?lat={latitude}&lon={longitude}&mode={mode}&units={units}&appid={_options.ApiKey}";
 
         var response
-            = await httpClient.GetFromJsonAsync<OpenWeatherResponseDto>(uri, cancellationToken)
+            = await httpClient.GetFromJsonAsync<CurrentWeatherResponseDto>(uri, cancellationToken)
               ?? throw new InvalidOperationException("OpenWeather returned an empty response");
         
         return response.DailyForecasts
