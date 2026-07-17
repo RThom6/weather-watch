@@ -9,7 +9,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
 {
     private readonly OpenWeatherOptions _options = options.Value;
     
-    public async Task<IReadOnlyList<DailyForecast>> GetForecastAsync(
+    public async Task<IReadOnlyList<DailyForecast>> GetCurrentWeatherAsync(
         double latitude,
         double longitude,
         string? mode = "json",

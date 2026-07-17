@@ -2,6 +2,10 @@ using System.Text.Json.Serialization;
 
 namespace WeatherWatch.Infrastructure.Weather.Dtos;
 
+/// <summary>
+/// Dto includes all of the fields potentially returned by OpenWeatherApi's current forecast Api:
+/// https://openweathermap.org/api/current?collection=current_forecast
+/// </summary>
 internal sealed record CurrentWeatherResponseDto
 {
     [JsonPropertyName("coord")]
