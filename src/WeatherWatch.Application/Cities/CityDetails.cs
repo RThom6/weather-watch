@@ -1,6 +1,8 @@
-namespace WeatherWatch.Application.Cities;
+using WeatherWatch.Application.Weather;
 
-public record City
+namespace WeatherWatch.Application.Cities.Services;
+
+public record CityDetails
 {
     public Guid CityId { get; init; }
     public required string CountryCode { get; init; }
@@ -8,8 +10,5 @@ public record City
     public required string State { get; init; }
     public required string Country { get; init; }
     public string? CurrencyCode { get; init; }
-    
-    // Some sort of weather information
-    public double Latitude { get; init; }
-    public double Longitude { get; init; }
+    public CurrentWeather CurrentWeather { get; init; }
 }

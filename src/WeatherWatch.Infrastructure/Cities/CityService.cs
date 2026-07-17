@@ -22,15 +22,17 @@ public class CityService(
                 State = request.State,
                 Country = countryInfo.Name,
                 CountryCode = countryInfo.IsoCode,
-                CurrencyCode = countryInfo.CurrencyCode,
-                TouristRating = request.TouristRating ?? 0,
-                DateEstablished = request.DateEstablished,
-                EstimatedPopulation = request.EstimatedPopulation ?? 0,
+                CurrencyCode = countryInfo.CurrencyCode
             };
         
         dbContext.Cities.Add(city);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return new CreateCityResult { IsSuccess = true, CityId = city.CityId };
+    }
+
+    public async Task<CityDetails> GetCityDetails(Guid cityId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }

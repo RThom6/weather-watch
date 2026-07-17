@@ -11,7 +11,7 @@ public record CountryResponseDto
 public record CountryDataDto
 {
     [JsonPropertyName("objects")]
-    public List<CountryObjectDto>? Objects { get; init; }
+    public IReadOnlyList<CountryObjectDto>? Objects { get; init; } = [];
 }
 
 public record CountryObjectDto
@@ -23,13 +23,33 @@ public record CountryObjectDto
     public CountryCodesDto? Codes { get; init; }
   
     [JsonPropertyName("currencies")]
-    public List<CurrencyDto>? Currencies { get; init; }
+    public IReadOnlyList<CurrencyDto>? Currencies { get; init; } = [];
+
+    [JsonPropertyName("capitals")]
+    public IReadOnlyList<CapitalDto> Capitals { get; init; } = [];
 }
 
 public record CountryNamesDto
 {
     [JsonPropertyName("common")]
     public string? Common { get; init; }
+}
+
+public record CapitalDto
+{
+    [JsonPropertyName("coordinates")]
+    public CoordinateDto? Coordinates { get; init; }
+    
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+}
+
+public record CoordinateDto
+{
+    [JsonPropertyName("lat")]
+    public double Latitude { get; init; }
+    [JsonPropertyName("lng")]
+    public double Longitude { get; init; }
 }
 
 public record CountryCodesDto

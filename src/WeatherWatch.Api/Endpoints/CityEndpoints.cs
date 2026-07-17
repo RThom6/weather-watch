@@ -12,9 +12,6 @@ public static class CityEndpoints
                 string state,
                 string country,
                 string countryCode,
-                int? touristRating,
-                DateOnly? dateEstablished,
-                int? estimatedPopulation,
                 ICityService cityService,
                 CancellationToken cancellationToken) =>
             {
@@ -24,15 +21,22 @@ public static class CityEndpoints
                     State = state,
                     Country = country,
                     CountryCode = countryCode,
-                    TouristRating = touristRating,
-                    DateEstablished = dateEstablished,
-                    EstimatedPopulation = estimatedPopulation
                 };
                 
                 var result = await cityService.CreateCity(request, cancellationToken);
                 return Results.Ok(result);
             })
             .WithName("CreateCity");
+        
+        app.MapGet("/cities/{cityId}/details", async (
+            string cityId,
+            ICityService cityService,
+            CancellationToken cancellationToken
+        ) =>
+        {
+            
+        })
+        .WithName("GetCityDetails");
         
         return app;
     }
