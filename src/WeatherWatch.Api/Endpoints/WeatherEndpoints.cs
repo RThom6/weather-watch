@@ -12,7 +12,7 @@ public static class WeatherEndpoints
                 IWeatherService weatherService,
                 CancellationToken cancellationToken) =>
             {
-                var forecast = await weatherService.GetCurrentWeatherAsync(latitude, longitude, cancellationToken: cancellationToken);
+                var forecast = await weatherService.GetCurrentWeatherByCoordinates(latitude, longitude, cancellationToken: cancellationToken);
                 return Results.Ok(forecast);
             })
             .WithName("GetWeatherForecast");

@@ -2,7 +2,7 @@ namespace WeatherWatch.Application.Weather;
 
 public interface IWeatherService
 {
-    Task<IReadOnlyList<DailyForecast>> GetCurrentWeatherAsync(double latitude,
+    Task<CurrentWeather> GetCurrentWeatherByCoordinates(double latitude,
         double longitude,
         string? mode = "json",
         string? units = "metric",

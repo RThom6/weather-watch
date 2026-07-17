@@ -9,7 +9,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
 {
     private readonly OpenWeatherOptions _options = options.Value;
     
-    public async Task<IReadOnlyList<DailyForecast>> GetCurrentWeatherAsync(
+    public async Task<CurrentWeather> GetCurrentWeatherByCoordinates(
         double latitude,
         double longitude,
         string? mode = "json",
@@ -21,13 +21,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         var response
             = await httpClient.GetFromJsonAsync<CurrentWeatherResponseDto>(uri, cancellationToken)
               ?? throw new InvalidOperationException("OpenWeather returned an empty response");
-        
-        return response.DailyForecasts
-            .Select(d => new DailyForecast
-            {
-                Date = DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(d.Dt).UtcDateTime),
-                Temperature = new Temp { Celsius = d.Temp.Day },
-                Summary = d.Summary,
-            }).ToList();
+
+        return new CurrentWeather();
     }
 }
