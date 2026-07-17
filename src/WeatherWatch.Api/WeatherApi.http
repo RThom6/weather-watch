@@ -1,6 +1,12 @@
 @WeatherApi_HostAddress = http://localhost:5170
+@Api_NgrokAddress = https://agonizing-enzyme-paddle.ngrok-free.dev
 
 GET {{WeatherApi_HostAddress}}/weatherforecast?latitude=50.4&longitude=32
+Accept: application/json
+
+###
+
+GET {{Api_NgrokAddress}}/weatherforecast?latitude=50.4&longitude=32
 Accept: application/json
 
 ###

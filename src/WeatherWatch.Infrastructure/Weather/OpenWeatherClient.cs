@@ -14,9 +14,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         double longitude,
         CancellationToken cancellationToken = default)
     {
-        var url = $"onecall?lat={latitude}&lon={longitude}" 
-                  + "&units=metric&exclude=current,minutely,hourly,alerts" 
-                  + $"&appid={_options.ApiKey}";;
+        var url = $"weather?lat={latitude}&lon={longitude}&appid={_options.ApiKey}";
 
         var response
             = await httpClient.GetFromJsonAsync<OpenWeatherResponseDto>(url, cancellationToken)
