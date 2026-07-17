@@ -9,6 +9,11 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cities\Commands\" />
+    <Folder Include="Cities\Queries\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
