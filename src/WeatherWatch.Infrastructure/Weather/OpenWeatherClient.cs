@@ -14,10 +14,10 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         double longitude,
         CancellationToken cancellationToken = default)
     {
-        var url = $"weather?lat={latitude}&lon={longitude}&appid={_options.ApiKey}";
+        var uri = $"weather?lat={latitude}&lon={longitude}&appid={_options.ApiKey}";
 
         var response
-            = await httpClient.GetFromJsonAsync<OpenWeatherResponseDto>(url, cancellationToken)
+            = await httpClient.GetFromJsonAsync<OpenWeatherResponseDto>(uri, cancellationToken)
               ?? throw new InvalidOperationException("OpenWeather returned an empty response");
         
         return response.DailyForecasts
