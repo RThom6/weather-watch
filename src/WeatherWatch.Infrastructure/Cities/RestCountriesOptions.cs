@@ -1,4 +1,4 @@
-namespace WeatherWatch.Infrastructure.Cities.Dtos;
+namespace WeatherWatch.Infrastructure.Cities;
 
 public sealed record RestCountriesOptions
 {

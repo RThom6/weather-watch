@@ -9,6 +9,7 @@ public record City
     public required string Country { get; init; }
     public string? CurrencyCode { get; init; }
     public int TouristRating { get; init; }
+    public DateOnly? DateEstablished { get; init; }
     public int EstimatedPopulation { get; init; }
     // Some sort of weather information
     public double Latitude { get; init; }

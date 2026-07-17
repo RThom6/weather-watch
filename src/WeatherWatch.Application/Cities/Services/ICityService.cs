@@ -1,4 +1,4 @@
-namespace WeatherWatch.Application.Cities;
+namespace WeatherWatch.Application.Cities.Services;
 
 public interface ICityService
 {

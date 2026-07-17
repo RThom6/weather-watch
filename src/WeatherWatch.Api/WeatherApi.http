@@ -10,3 +10,8 @@ GET {{Api_NgrokAddress}}/weatherforecast?latitude=50.4&longitude=32
 Accept: application/json
 
 ###
+
+POST {{WeatherApi_HostAddress}}/cities/create?name=London&state=England&country=United Kingdom&countryCode=826&touristRating=5&dateEstablished=1965-01-01&estimatedPopulation=8900000
+Accept: application/json
+
+###

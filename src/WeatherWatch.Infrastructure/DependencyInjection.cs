@@ -1,8 +1,11 @@
 ﻿using System.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WeatherWatch.Application.Cities;
+using WeatherWatch.Application.Cities.Services;
 using WeatherWatch.Application.Weather;
+using WeatherWatch.Infrastructure.Cities;
 using WeatherWatch.Infrastructure.Cities.Dtos;
 using WeatherWatch.Infrastructure.Weather;
 
@@ -28,15 +31,21 @@ public static class DependencyInjection
             client.Timeout = TimeSpan.FromSeconds(5);
         });
 
-        services.AddHttpClient<ICityService, RestCountriesClient>(client =>
+        services.AddHttpClient<ICountryLookupClient, RestCountriesClient>(client =>
         {
             client.BaseAddress = new Uri(restCountriesOptions.BaseUrl);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", restCountriesOptions.ApiKey);
             client.Timeout = TimeSpan.FromSeconds(5);
         });
         
-        // Configuration
+        // Options Configuration
         services.Configure<OpenWeatherOptions>(configuration.GetSection("OpenWeather"));
-        services.Configure<RestCountriesOptions>(configuration.GetSection("RestCountries"));
+        
+        // DbContext
+        services.AddDbContext<CityDbContext>(opt =>
+            opt.UseSqlite(configuration.GetConnectionString("CityStore")));
+        
+        services.AddScoped<ICityService, CityService>();
         
         return services;
     }

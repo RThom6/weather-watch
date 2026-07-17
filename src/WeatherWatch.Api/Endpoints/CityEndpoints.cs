@@ -1,4 +1,5 @@
 using WeatherWatch.Application.Cities;
+using WeatherWatch.Application.Cities.Services;
 
 namespace WeatherWatch.Api.Endpoints;
 
@@ -11,6 +12,9 @@ public static class CityEndpoints
                 string state,
                 string country,
                 string countryCode,
+                int? touristRating,
+                DateOnly? dateEstablished,
+                int? estimatedPopulation,
                 ICityService cityService,
                 CancellationToken cancellationToken) =>
             {
@@ -19,7 +23,10 @@ public static class CityEndpoints
                     Name = name,
                     State = state,
                     Country = country,
-                    CountryCode = countryCode
+                    CountryCode = countryCode,
+                    TouristRating = touristRating,
+                    DateEstablished = dateEstablished,
+                    EstimatedPopulation = estimatedPopulation
                 };
                 
                 var result = await cityService.CreateCity(request, cancellationToken);
