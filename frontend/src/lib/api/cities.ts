@@ -25,8 +25,11 @@ export async function createCity(
   request: CreateCityRequest,
   fetchFn: typeof fetch = fetch
 ): Promise<CreateCityResult> {
-  const params = new URLSearchParams(request);
-  const res = await fetchFn(`${API_BASE}/cities/create?${params}`, { method: 'POST' });
+  const res = await fetchFn(`${API_BASE}/cities/create`, { 
+    method: 'POST',
+    headers: { 'Content-Type': 'applications/json' },
+    body: JSON.stringify(request)
+  });
   if (!res.ok) throw new Error(`CreateCity failed: ${res.status}`);
   return res.json();
 }
