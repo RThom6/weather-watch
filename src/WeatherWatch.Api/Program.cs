@@ -41,6 +41,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
+        app.UseCors("Frontend");
 
         app.MapWeatherEndpoints();
         app.MapCityEndpoints();
