@@ -26,3 +26,11 @@ Seiko takehome test starter. Just messing about learning about some stuff for if
   - Create -> creates a city from some basic info. This I can get if I list of the cities on the FE using the countryApi and search feature.
   - Get Details -> Gets some basic weather details and city details, can flesh out with front end
   - Search -> Searches for cities by name, maybe make name not a guid so that searching for cityId works better? Not fully sure on the functionality here tbh
+  - Fast endpoint would allow for single responsibility and open close principals instead of having all my endpoints for a feature in one class
+
+
+### Notes - 18/07/2026
+
+I could split the operations into handlers. This would be a nice abstraction but not worth it for such a small program. Especially since my dependencies aren't different between them in this case.
+
+Used styling from ondersumer077's weatherCard repo: https://github.com/ondersumer07/weatherCard/tree/master
