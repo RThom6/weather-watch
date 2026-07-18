@@ -68,4 +68,58 @@ public class CityService(
             .Select(c => new CitySummary { CityId = c.CityId, Name = c.Name, CountryName = c.Country})
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<UpdateCityResult> UpdateCity(UpdateCityRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (request is { DateEstablished: null, EstimatedPopulation: null, TouristRating: null })
+        {
+            return new UpdateCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = $"Failed to update city {request.CityId}. Rating, Date, and Population were all empty"
+            };
+        }
+        
+        var city
+            = await dbContext.Cities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CityId == request.CityId, cancellationToken);
+
+        if (city is null)
+        {
+            return new UpdateCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = $"City {request.CityId} not found"
+            };
+        }
+        
+        // Only update the ones that aren't null
+        var updatedCity
+            = city with
+            {
+                DateEstablished = request.DateEstablished ?? city.DateEstablished,
+                EstimatedPopulation = request.EstimatedPopulation ?? city.EstimatedPopulation,
+                TouristRating = request.TouristRating ?? city.TouristRating
+            };
+
+        dbContext.Update(updatedCity);
+        int rows = await dbContext.SaveChangesAsync(cancellationToken);
+
+        if (rows < 1)
+        {
+            return new UpdateCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = "Something went wrong. Unable to update city"
+            };
+        }
+
+        return new UpdateCityResult
+        {
+            IsSuccess = true,
+            CityId = updatedCity.CityId,
+        };
+    }
 }

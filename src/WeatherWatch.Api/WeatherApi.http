@@ -25,3 +25,6 @@ GET {{WeatherApi_HostAddress}}/cities/search?name=london
 Accept: application/json
 
 ###
+
+PATCH {{WeatherApi_HostAddress}}/cities/B5130179-0F4F-428C-B1BC-37195F386300/update?touristRating=5
+Accept: application/json

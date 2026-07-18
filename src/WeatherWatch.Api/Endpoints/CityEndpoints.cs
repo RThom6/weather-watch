@@ -49,6 +49,29 @@ public static class CityEndpoints
             })
             .WithName("SearchCities");
         
+        app.MapPatch("/cities/{cityId}/update", async (
+            Guid cityId,
+            int? touristRating,
+            DateOnly? dateEstablished,
+            int? estimatedPopulation,
+            ICityService cityService,
+            CancellationToken cancellationToken) =>
+            {
+                var request
+                    = new UpdateCityRequest
+                    {
+                        CityId = cityId,
+                        TouristRating = touristRating,
+                        DateEstablished = dateEstablished,
+                        EstimatedPopulation = estimatedPopulation
+                    };
+
+                var result = await cityService.UpdateCity(request, cancellationToken);
+                // Better error handling
+                return result is not null ? Results.Ok(result) : Results.NotFound();
+            })
+        .WithName("UpdateCity");
+        
         return app;
     }
 }

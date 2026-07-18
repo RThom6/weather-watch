@@ -2,6 +2,8 @@ using System.Text.Json.Serialization;
 
 namespace WeatherWatch.Infrastructure.Cities.Dtos;
 
+// Relevant info from https://restcountries.com/docs/countries api response
+// Can extend to capture more of the return info
 public record CountryResponseDto
 {
     [JsonPropertyName("data")]
