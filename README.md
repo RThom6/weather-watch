@@ -1,5 +1,5 @@
 # weather-watch
-Seiko takehome test starter. Just messing about learning about some stuff for if I get the takehome test.
+Seiko takehome test
 
 ### Notes - 16/07/2026
 
