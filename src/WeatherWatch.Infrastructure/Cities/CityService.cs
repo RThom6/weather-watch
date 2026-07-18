@@ -59,4 +59,13 @@ public class CityService(
             CurrentWeather = currentWeather
         };
     }
+    
+    public async Task<IReadOnlyList<CitySummary>> SearchCities(string name, CancellationToken cancellationToken = default)
+    {
+        return await dbContext.Cities
+            .AsNoTracking()
+            .Where(c => EF.Functions.Like(c.Name, $"%{name}%"))
+            .Select(c => new CitySummary { CityId = c.CityId, Name = c.Name, CountryName = c.Country})
+            .ToListAsync(cancellationToken);
+    }
 }
