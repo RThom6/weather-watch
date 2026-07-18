@@ -22,6 +22,14 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
             = await httpClient.GetFromJsonAsync<CurrentWeatherResponseDto>(uri, cancellationToken)
               ?? throw new InvalidOperationException("OpenWeather returned an empty response");
 
-        return new CurrentWeather();
+        return new CurrentWeather 
+        {
+            Summary = response.Weather?.FirstOrDefault()?.Description ?? "",
+            TemperatureCelsius = response.Main?.Temp ?? 0,
+            FeelsLikeCelsius = response.Main?.FeelsLike ?? 0,
+            Humidity = response.Main?.Humidity ?? 0,
+            WindSpeed = response.Wind?.Speed ?? 0,
+            ObservedAt = DateTimeOffset.FromUnixTimeSeconds(response.Dt),
+        };
     }
 }
