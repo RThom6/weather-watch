@@ -35,3 +35,15 @@ export interface CreateCityResult {
   errorMessage: string | null;
   cityId: string;
 }
+
+export interface UpdateCityRequest {
+  touristRating: number;
+  dateEstablished: Date;
+  estimatedPopulation: number;
+}
+
+export interface UpdateCityResult {
+  isSuccess: boolean;
+  errorMessage: string | null;
+  cityId: string;
+}

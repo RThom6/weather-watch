@@ -33,3 +33,26 @@ export async function createCity(
   if (!res.ok) throw new Error(`CreateCity failed: ${res.status}`);
   return res.json();
 }
+
+export async function deleteCity(
+  cityId: string,
+  fetchFn: typeof fetch = fetch
+): Promise<DeleteCityResult> {
+  const res = await fetchFn(`${API_BASE}/cities/${cityId}/delete`);
+  if (!res.ok) throw new Error(`DeleteCity failed: ${res.status}`);
+  return res.json();
+}
+
+export async function updateCity(
+  cityId: string,
+  request: UpdateCityRequest,
+  fetchFn: typeof fetch = fetch
+): Promise<UpdateCityResult> {
+  const res = await fetchFn(`${API_BASE}/cities/${cityId}/update`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'applications/json' },
+    body: JSON.stringify(request)
+  });
+  if (!res.ok) throw new Error(`UpdateCity failed: ${res.status}`);
+  return res.json();
+}
