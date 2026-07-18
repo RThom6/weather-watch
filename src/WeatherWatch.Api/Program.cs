@@ -17,6 +17,14 @@ public class Program
         builder.Services.AddOpenApi();
 
         builder.Services.AddInfrastructure(builder.Configuration);
+        
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Frontend", policy =>
+                policy.WithOrigins("http://localhost:5173")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });
 
         var app = builder.Build();
         
@@ -36,14 +44,6 @@ public class Program
 
         app.MapWeatherEndpoints();
         app.MapCityEndpoints();
-
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("Frontend", policy =>
-                policy.WithOrigins("http://localhost:5173")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-        });
 
         app.Run();
     }

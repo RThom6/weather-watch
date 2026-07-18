@@ -11,8 +11,15 @@ Accept: application/json
 
 ###
 
-POST {{WeatherApi_HostAddress}}/cities/create?name=London&state=England&country=United Kingdom&countryCode=826&touristRating=5&dateEstablished=1965-01-01&estimatedPopulation=8900000
-Accept: application/json
+POST {{WeatherApi_HostAddress}}/cities/create
+Content-Type: application/json
+
+{
+  "name": "London",
+  "state": "England",
+  "country": "United Kingdom",
+  "countryCode": "826"
+}
 
 ###
 
