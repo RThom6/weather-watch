@@ -56,6 +56,9 @@ public class CityService(
             Country = city.Country,
             CountryCode = city.CountryCode,
             CurrencyCode = city.CurrencyCode,
+            EstimatedPopulation = city.EstimatedPopulation,
+            TouristRating = city.TouristRating,
+            DateEstablished = city.DateEstablished,
             CurrentWeather = currentWeather
         };
     }

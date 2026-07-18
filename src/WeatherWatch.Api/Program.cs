@@ -29,13 +29,21 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapCityEndpoints();
         }
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
 
         app.MapWeatherEndpoints();
+        app.MapCityEndpoints();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("Frontend", policy =>
+                policy.WithOrigins("http://localhost:5173")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });
 
         app.Run();
     }
