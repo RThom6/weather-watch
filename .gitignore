@@ -91,3 +91,5 @@ test-results
 */appsettings.*
 *.DotSettings.user
 src/WeatherWatch.Api/appsettings.Development.json
+
+**/WeatherWatch.Api/citywatch.db*
