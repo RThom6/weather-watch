@@ -67,10 +67,17 @@ public static class CityEndpoints
                     };
 
                 var result = await cityService.UpdateCity(request, cancellationToken);
-                // Better error handling
-                return result is not null ? Results.Ok(result) : Results.NotFound();
+
+                return Results.Ok(result);
             })
         .WithName("UpdateCity");
+        
+        app.MapDelete("/cities/{cityId}", async (
+            Guid cityId,
+            ICityService cityService,
+            CancellationToken cancellationToken) =>
+                Results.Ok((object?)await cityService.DeleteCity(cityId, cancellationToken)))
+            .WithName("DeleteCity");
         
         return app;
     }

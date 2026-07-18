@@ -122,4 +122,38 @@ public class CityService(
             CityId = updatedCity.CityId,
         };
     }
+
+    public async Task<DeleteCityResult> DeleteCity(Guid cityId, CancellationToken cancellationToken = default)
+    {
+        var city
+            = await dbContext.Cities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CityId == cityId, cancellationToken);
+
+        if (city is null)
+        {
+            return new DeleteCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = $"City {cityId} not found"
+            };
+        }
+
+        dbContext.Remove(city);
+        var rows = await dbContext.SaveChangesAsync(cancellationToken);
+        
+        if (rows < 1)
+        {
+            return new DeleteCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = "Something went wrong. Unable to delete city"
+            };
+        }
+
+        return new DeleteCityResult
+        {
+            IsSuccess = true,
+        };
+    }
 }
