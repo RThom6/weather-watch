@@ -15,3 +15,8 @@ POST {{WeatherApi_HostAddress}}/cities/create?name=London&state=England&country=
 Accept: application/json
 
 ###
+
+GET {{WeatherApi_HostAddress}}/cities/36da18b9-71ab-4f30-ae39-ed48c03917bd/details
+Accept: application/json
+
+###

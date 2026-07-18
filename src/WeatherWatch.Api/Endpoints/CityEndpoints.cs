@@ -29,12 +29,13 @@ public static class CityEndpoints
             .WithName("CreateCity");
         
         app.MapGet("/cities/{cityId}/details", async (
-            string cityId,
+            Guid cityId,
             ICityService cityService,
             CancellationToken cancellationToken
         ) =>
         {
-            
+            var details = await cityService.GetCityDetails(cityId, cancellationToken);
+            return details is not null ? Results.Ok(details) : Results.NotFound();
         })
         .WithName("GetCityDetails");
         
