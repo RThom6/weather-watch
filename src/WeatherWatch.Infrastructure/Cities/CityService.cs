@@ -16,6 +16,17 @@ public class CityService(
     {
         // Validation
         var countryInfo = await countryLookupClient.GetCountryByIsoCode(request.CountryCode, cancellationToken);
+        
+        var requestedCity = countryInfo.Capitals.FirstOrDefault(c => c.Name == request.Name);
+
+        if (requestedCity is null)
+        {
+            return new CreateCityResult
+            {
+                IsSuccess = false,
+                ErrorMessage = $"City {request.Name} was not found"
+            };
+        }
 
         var city
             = new City
@@ -25,7 +36,9 @@ public class CityService(
                 State = request.State,
                 Country = countryInfo.Name,
                 CountryCode = countryInfo.IsoCode,
-                CurrencyCode = countryInfo.CurrencyCode
+                CurrencyCode = countryInfo.CurrencyCode,
+                Latitude = requestedCity.Latitude,
+                Longitude = requestedCity.Longitude
             };
         
         dbContext.Cities.Add(city);
@@ -72,7 +85,9 @@ public class CityService(
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<UpdateCityResult> UpdateCity(UpdateCityRequest request,
+    public async Task<UpdateCityResult> UpdateCity(
+        Guid cityId,
+        UpdateCityRequest request,
         CancellationToken cancellationToken = default)
     {
         if (request is { DateEstablished: null, EstimatedPopulation: null, TouristRating: null })
@@ -80,21 +95,21 @@ public class CityService(
             return new UpdateCityResult
             {
                 IsSuccess = false,
-                ErrorMessage = $"Failed to update city {request.CityId}. Rating, Date, and Population were all empty"
+                ErrorMessage = $"Failed to update city {cityId}. Rating, Date, and Population were all empty"
             };
         }
         
         var city
             = await dbContext.Cities
                 .AsNoTracking()
-                .FirstOrDefaultAsync(c => c.CityId == request.CityId, cancellationToken);
+                .FirstOrDefaultAsync(c => c.CityId == cityId, cancellationToken);
 
         if (city is null)
         {
             return new UpdateCityResult
             {
                 IsSuccess = false,
-                ErrorMessage = $"City {request.CityId} not found"
+                ErrorMessage = $"City {cityId} not found"
             };
         }
         

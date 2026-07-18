@@ -40,22 +40,11 @@ public static class CityEndpoints
         
         app.MapPatch("/cities/{cityId}/update", async (
             Guid cityId,
-            int? touristRating,
-            DateOnly? dateEstablished,
-            int? estimatedPopulation,
+            UpdateCityRequest request,
             ICityService cityService,
             CancellationToken cancellationToken) =>
             {
-                var request
-                    = new UpdateCityRequest
-                    {
-                        CityId = cityId,
-                        TouristRating = touristRating,
-                        DateEstablished = dateEstablished,
-                        EstimatedPopulation = estimatedPopulation
-                    };
-
-                var result = await cityService.UpdateCity(request, cancellationToken);
+                var result = await cityService.UpdateCity(cityId, request, cancellationToken);
 
                 return Results.Ok(result);
             })

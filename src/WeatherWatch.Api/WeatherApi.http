@@ -23,7 +23,7 @@ Content-Type: application/json
 
 ###
 
-GET {{WeatherApi_HostAddress}}/cities/36da18b9-71ab-4f30-ae39-ed48c03917bd/details
+GET {{WeatherApi_HostAddress}}/cities/78c85277-cc3e-4686-bbb6-00810f4d5bec/details
 Accept: application/json
 
 ###
@@ -33,8 +33,14 @@ Accept: application/json
 
 ###
 
-PATCH {{WeatherApi_HostAddress}}/cities/B5130179-0F4F-428C-B1BC-37195F386300/update?touristRating=5
-Accept: application/json
+PATCH {{WeatherApi_HostAddress}}/cities/78c85277-cc3e-4686-bbb6-00810f4d5bec/update
+Content-Type: application/json
+
+{
+    "touristRating": 4.6,
+    "dateEstablished": "2026-06-17",
+    "estimatedPopulation": 12
+}
 
 ### 
 
