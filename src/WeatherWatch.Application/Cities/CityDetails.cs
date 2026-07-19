@@ -12,5 +12,5 @@ public record CityDetails
     public int? EstimatedPopulation { get; init; }
     public decimal? TouristRating { get; init; }
     public DateOnly? DateEstablished { get; init; }
-    public IReadOnlyList<DailyForecast> SixteenDayForecast { get; init; }
+    public IReadOnlyList<DailyForecast> Forecast { get; init; }
 }

@@ -8,7 +8,7 @@ public interface IWeatherService
         string? units = "metric",
         CancellationToken cancellationToken = default);
     
-    Task<IReadOnlyList<DailyForecast>> GetSixteenDayWeatherByCoordinates(double latitude,
+    Task<IReadOnlyList<DailyForecast>> GetFiveDayForecastByCoordinates(double latitude,
         double longitude,
         string? mode = "json",
         string? units = "metric",

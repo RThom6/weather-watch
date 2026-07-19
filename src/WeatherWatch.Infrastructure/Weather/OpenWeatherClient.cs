@@ -34,59 +34,47 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         };
     }
 
-    public async Task<IReadOnlyList<DailyForecast>> GetSixteenDayWeatherByCoordinates(
+    public async Task<IReadOnlyList<DailyForecast>> GetFiveDayForecastByCoordinates(
         double latitude,
         double longitude,
         string? mode = "json",
         string? units = "metric",
         CancellationToken cancellationToken = default)
     {
-        var uri = $"forecast/daily?lat={latitude}&lon={longitude}&mode={mode}&units={units}&cnt=16&appid={_options.ApiKey}";
+        var uri = $"forecast?lat={latitude}&lon={longitude}&mode={mode}&units={units}&appid={_options.ApiKey}";
 
-        var response = await httpClient.GetFromJsonAsync<DailyForecastResponseDto>(uri, cancellationToken)
+        var response = await httpClient.GetFromJsonAsync<ForecastResponseDto>(uri, cancellationToken)
                        ?? throw new InvalidOperationException("OpenWeather returned an empty response");
 
+        // The endpoint returns a reading every 3 hours; roll them up into one summary per day.
         return (response.List ?? [])
+            .GroupBy(entry => DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(entry.Dt).UtcDateTime))
+            .OrderBy(day => day.Key)
             .Select(ToDailyForecast)
             .ToList();
     }
 
-    private static DailyForecast ToDailyForecast(DailyForecastItemDto item)
+    private static DailyForecast ToDailyForecast(IGrouping<DateOnly, ForecastEntryDto> day)
     {
-        var weather = item.Weather?.FirstOrDefault();
+        // Use the reading nearest midday as the representative condition for the day.
+        var midday = day
+            .OrderBy(entry => Math.Abs(DateTimeOffset.FromUnixTimeSeconds(entry.Dt).UtcDateTime.Hour - 12))
+            .First();
+
+        var weather = midday.Weather?.FirstOrDefault();
 
         return new DailyForecast
         {
+            Date = day.Key,
             Summary = weather?.Description ?? "",
             Condition = weather?.Main ?? "",
-            WeatherId = weather?.Id ?? 0,
             Icon = weather?.Icon,
-            ForecastedAt = DateTimeOffset.FromUnixTimeSeconds(item.Dt),
-            Temperature = new DailyTemperature
-            {
-                Day = item.Temp?.Day ?? 0,
-                Night = item.Temp?.Night ?? 0,
-                Eve = item.Temp?.Eve ?? 0,
-                Morn = item.Temp?.Morn ?? 0,
-                Min = item.Temp?.Min,
-                Max = item.Temp?.Max,
-            },
-            FeelsLike = new DailyTemperature
-            {
-                Day = item.FeelsLike?.Day ?? 0,
-                Night = item.FeelsLike?.Night ?? 0,
-                Eve = item.FeelsLike?.Eve ?? 0,
-                Morn = item.FeelsLike?.Morn ?? 0,
-            },
-            PressureHpa = item.Pressure,
-            Humidity = item.Humidity,
-            WindSpeed = item.Speed,
-            WindDirectionDegrees = item.Deg,
-            WindGust = item.Gust,
-            Cloudiness = item.Clouds,
-            RainMm = item.Rain,
-            SnowMm = item.Snow,
-            PrecipitationChance = item.Pop,
+            MinCelsius = day.Min(entry => entry.Main?.TempMin ?? 0),
+            MaxCelsius = day.Max(entry => entry.Main?.TempMax ?? 0),
+            DayCelsius = midday.Main?.Temp ?? 0,
+            Humidity = midday.Main?.Humidity ?? 0,
+            WindSpeed = day.Max(entry => entry.Wind?.Speed ?? 0),
+            PrecipitationChance = day.Max(entry => entry.Pop),
         };
     }
 }

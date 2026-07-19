@@ -75,7 +75,7 @@ public class CityService(
             return null;
 
         var forecasts
-            = await weatherService.GetSixteenDayWeatherByCoordinates(
+            = await weatherService.GetFiveDayForecastByCoordinates(
                 city.Latitude,
                 city.Longitude,
                 cancellationToken: cancellationToken);
@@ -90,7 +90,7 @@ public class CityService(
             EstimatedPopulation = city.EstimatedPopulation,
             TouristRating = city.TouristRating,
             DateEstablished = city.DateEstablished,
-            SixteenDayForecast = forecasts
+            Forecast = forecasts
         };
     }
 

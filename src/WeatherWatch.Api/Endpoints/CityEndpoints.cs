@@ -48,7 +48,7 @@ public static class CityEndpoints
             var details = await cityService.GetCityDetailsPreview(cityId, cancellationToken);
             return details is not null ? Results.Ok(details) : Results.NotFound();
         })
-        .WithName("GetCityDetails");
+        .WithName("GetCityDetailsPreview");
         
         app.MapGet("/cities/search", async (
                 string name,
