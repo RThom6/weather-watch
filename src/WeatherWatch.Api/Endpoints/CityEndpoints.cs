@@ -28,6 +28,17 @@ public static class CityEndpoints
         })
         .WithName("FindCities");
         
+        app.MapGet("/cities/{cityId}/details", async (
+                int cityId,
+                ICityService cityService,
+                CancellationToken cancellationToken
+            ) =>
+            {
+                var details = await cityService.GetCityDetails(cityId, cancellationToken);
+                return Results.Ok(details);
+            })
+            .WithName("GetCityDetails");
+        
         app.MapGet("/cities/{cityId}/details/preview", async (
             int cityId,
             ICityService cityService,
