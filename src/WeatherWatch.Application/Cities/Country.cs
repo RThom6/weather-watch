@@ -5,5 +5,6 @@ public record Country
     public string IsoCode { get; init; }
     public string Name { get; init; }
     public string? CurrencyCode { get; init; }
+    public string? Timezone { get; init; }
     public IReadOnlyList<Capital> Capitals { get; init; } = [];
 }

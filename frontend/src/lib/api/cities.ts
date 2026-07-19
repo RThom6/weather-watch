@@ -46,7 +46,7 @@ export async function getCityDetailsPreview(
   return res.json();
 }
 
-// Full details for the city page: facts + current weather + the 16-day forecast.
+// Full details for the city page facts + current weather + the 5 day forecast
 export async function getCityDetails(
   cityId: number,
   fetchFn: typeof fetch = fetch

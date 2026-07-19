@@ -81,7 +81,10 @@
   const temperature = $derived(weather ? Math.round(weather.temperatureCelsius) : 0);
   const feelsLike = $derived(weather ? Math.round(weather.feelsLikeCelsius) : 0);
 
-  const currentHour = new Date().getHours();
+  // Current hour in the city's own timezone, from the country's UTC offset.
+  const currentHour = $derived(
+    new Date(Date.now() + city.utcOffsetSeconds * 1000).getUTCHours()
+  );
   const backgroundUrl = $derived(weather ? weatherBackground(weather.condition, currentHour) : '');
 
   // e.g. "Updated 3:42 PM"

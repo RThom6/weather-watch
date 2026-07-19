@@ -14,7 +14,6 @@ public class CityService(
     public async Task<CreateCityResult> CreateCity(CreateCityRequest request,
         CancellationToken cancellationToken = default)
     {
-        // Validation
         var countryInfo = await countryLookupClient.GetCountryByIsoCode(request.CountryCode, cancellationToken);
         
         var requestedCity = countryInfo.Capitals.FirstOrDefault(c => c.Name == request.Name);
@@ -36,7 +35,8 @@ public class CityService(
                 CountryCode = countryInfo.IsoCode,
                 CurrencyCode = countryInfo.CurrencyCode,
                 Latitude = requestedCity.Latitude,
-                Longitude = requestedCity.Longitude
+                Longitude = requestedCity.Longitude,
+                Timezone = countryInfo.Timezone
             };
         
         dbContext.Cities.Add(city);
@@ -97,8 +97,25 @@ public class CityService(
             TouristRating = city.TouristRating,
             DateEstablished = city.DateEstablished,
             Forecast = forecasts,
-            CurrentWeather = currentWeather
+            CurrentWeather = currentWeather,
+            UtcOffsetSeconds = ParseUtcOffsetSeconds(city.Timezone)
         };
+    }
+
+    // Converts a RestCountries timezone to shift in seconds
+    private static int ParseUtcOffsetSeconds(string? timezone)
+    {
+        if (string.IsNullOrWhiteSpace(timezone))
+            return 0;
+
+        var text = timezone.Replace("UTC", "").Trim();
+        if (text.Length == 0)
+            return 0;
+
+        var sign = text[0] == '-' ? -1 : 1;
+        var magnitude = text.TrimStart('+', '-');
+
+        return TimeSpan.TryParse(magnitude, out var offset) ? sign * (int)offset.TotalSeconds : 0;
     }
 
     public async Task<CityDetailsPreview?> GetCityDetailsPreview(int cityId, CancellationToken cancellationToken = default)
@@ -120,12 +137,14 @@ public class CityService(
             CityId = city.CityId,
             Name = city.Name,
             Country = city.Country,
-            CurrentWeather = currentWeather
+            CurrentWeather = currentWeather,
+            UtcOffsetSeconds = ParseUtcOffsetSeconds(city.Timezone)
         };
     }
     
     public async Task<IReadOnlyList<CitySummary>> SearchCities(string name, int skip = 0, int take = 50, CancellationToken cancellationToken = default)
     {
+        // check whether search is an id or a name
         if (int.TryParse(name, out int cityId))
         {
             return await dbContext.Cities

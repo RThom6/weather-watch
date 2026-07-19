@@ -14,4 +14,5 @@ public record CityDetails
     public DateOnly? DateEstablished { get; init; }
     public IReadOnlyList<DailyForecast> Forecast { get; init; }
     public WeatherInfo CurrentWeather { get; init; }
+    public int UtcOffsetSeconds { get; init; }
 }

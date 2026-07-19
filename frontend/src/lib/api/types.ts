@@ -25,18 +25,17 @@ export interface CurrentWeather {
   observedAt: string;
 }
 
-// A daily rollup of the 5-day / 3-hour forecast.
 export interface DailyForecast {
   summary: string;
   condition: string;
   icon: string | null;
-  date: string; // DateOnly serializes as "YYYY-MM-DD"
+  date: string;
   minCelsius: number;
   maxCelsius: number;
   dayCelsius: number;
   humidity: number;
   windSpeed: number;
-  precipitationChance: number; // 0–1
+  precipitationChance: number;
 }
 
 export interface CityDetails {
@@ -50,6 +49,7 @@ export interface CityDetails {
   dateEstablished: string | null;
   currentWeather?: CurrentWeather;
   forecast: DailyForecast[];
+  utcOffsetSeconds: number; // shift from UTC for the city's timezone
 }
 
 export interface CreateCityRequest {
@@ -65,7 +65,7 @@ export interface CreateCityResult {
 
 export interface UpdateCityRequest {
   touristRating: number | null;
-  dateEstablished: string | null; // "YYYY-MM-DD"
+  dateEstablished: string | null;
   estimatedPopulation: number | null;
 }
 

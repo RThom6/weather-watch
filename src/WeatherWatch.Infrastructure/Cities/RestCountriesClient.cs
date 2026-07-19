@@ -43,6 +43,7 @@ public class RestCountriesClient(HttpClient httpClient) : ICountryLookupClient
             Name = country.Names?.Common ?? "",
             IsoCode = country.Codes?.Ccn3 ?? "",
             CurrencyCode = country.Currencies?.FirstOrDefault()?.Code,
+            Timezone = country.Timezones?.FirstOrDefault(),
             Capitals = country.Capitals.Select(c => new Capital
             {
                 Name = c.Name,

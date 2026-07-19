@@ -27,6 +27,9 @@ public record CountryObjectDto
     [JsonPropertyName("currencies")]
     public IReadOnlyList<CurrencyDto>? Currencies { get; init; } = [];
 
+    [JsonPropertyName("timezones")]
+    public IReadOnlyList<string>? Timezones { get; init; } = [];
+
     [JsonPropertyName("capitals")]
     public IReadOnlyList<CapitalDto> Capitals { get; init; } = [];
 }

@@ -10,6 +10,7 @@ public record City
     public int? EstimatedPopulation { get; init; }
     public decimal? TouristRating { get; init; }
     public DateOnly? DateEstablished { get; init; }
+    public String? Timezone { get; init; }
     
     // Some sort of weather information
     public double Latitude { get; init; }

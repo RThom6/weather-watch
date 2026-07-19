@@ -43,15 +43,13 @@
     };
   }
 
-  // `summary` is the human-readable text ("broken clouds"); `condition` is the
-  // OpenWeather "main" bucket ("Clouds") used to pick the background.
   const weatherState = $derived(city.currentWeather?.summary ?? '');
   const condition = $derived(city.currentWeather?.condition ?? '');
   const degreesCelcius = $derived(Math.round(city.currentWeather?.temperatureCelsius ?? 0));
 
-  // Day/night from the viewer's local hour. The city's own timezone isn't on
-  // CityDetails yet, so this uses the browser's clock for now.
-  const currentHour = new Date().getHours();
+  const currentHour = $derived(
+    new Date(Date.now() + (city.utcOffsetSeconds ?? 0) * 1000).getUTCHours()
+  );
 
   const backgroundUrl = $derived(weatherBackground(condition, currentHour));
 </script>
@@ -59,7 +57,6 @@
 <div
   class="relative m-4 w-full overflow-hidden rounded-lg shadow transition-shadow hover:shadow-lg md:w-auto md:min-w-87.5"
 >
-  <!-- Actions menu (siblings of the link so they aren't nested in an <a>) -->
   {#if onRemove || onDelete}
     <div class="absolute right-2 top-2 z-10" use:closeOnOutside>
       <button
@@ -109,7 +106,7 @@
     </div>
   {/if}
 
-  <a href={resolve('/cities/[id]', { id: String(city.cityId) })} class="block">
+  <a href={resolve('/cities/[id]', { id: String(city.cityId) })} data-sveltekit-preload-data="tap" class="block">
     <!-- Weather background header -->
     <div class="{backgroundUrl} bg-cover bg-no-repeat px-6 py-8 text-white">
       <p class="text-lg font-semibold">{weatherState}</p>
