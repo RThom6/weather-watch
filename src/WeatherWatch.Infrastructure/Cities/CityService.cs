@@ -31,7 +31,6 @@ public class CityService(
         var city
             = new City
             {
-                CityId = Guid.NewGuid(),
                 Name = request.Name,
                 Country = countryInfo.Name,
                 CountryCode = countryInfo.IsoCode,
@@ -65,7 +64,37 @@ public class CityService(
         };
     }
 
-    public async Task<CityDetails?> GetCityDetails(Guid cityId, CancellationToken cancellationToken = default)
+    public async Task<CityDetails> GetCityDetails(int cityId, CancellationToken cancellationToken = default)
+    {
+        var city
+            = await dbContext.Cities
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CityId == cityId, cancellationToken);
+
+        if (city is null)
+            return null;
+
+        var forecasts
+            = await weatherService.GetSixteenDayWeatherByCoordinates(
+                city.Latitude,
+                city.Longitude,
+                cancellationToken: cancellationToken);
+
+        return new CityDetails
+        {
+            CityId = city.CityId,
+            Name = city.Name,
+            Country = city.Country,
+            CountryCode = city.CountryCode,
+            CurrencyCode = city.CurrencyCode,
+            EstimatedPopulation = city.EstimatedPopulation,
+            TouristRating = city.TouristRating,
+            DateEstablished = city.DateEstablished,
+            SixteenDayForecast = forecasts
+        };
+    }
+
+    public async Task<CityDetailsPreview?> GetCityDetailsPreview(int cityId, CancellationToken cancellationToken = default)
     {
         var city
             = await dbContext.Cities
@@ -79,31 +108,41 @@ public class CityService(
             = await weatherService.GetCurrentWeatherByCoordinates(city.Latitude, city.Longitude,
                 cancellationToken: cancellationToken);
 
-        return new CityDetails
+        return new CityDetailsPreview
         {
             CityId = city.CityId,
             Name = city.Name,
             Country = city.Country,
-            CountryCode = city.CountryCode,
-            CurrencyCode = city.CurrencyCode,
-            EstimatedPopulation = city.EstimatedPopulation,
-            TouristRating = city.TouristRating,
-            DateEstablished = city.DateEstablished,
             CurrentWeather = currentWeather
         };
     }
     
-    public async Task<IReadOnlyList<CitySummary>> SearchCities(string name, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<CitySummary>> SearchCities(string name, int skip = 0, int take = 50, CancellationToken cancellationToken = default)
     {
+        if (int.TryParse(name, out int cityId))
+        {
+            return await dbContext.Cities
+                .AsNoTracking()
+                .Where(c => c.CityId == cityId)
+                .OrderBy(c => c.Name)
+                .Skip(skip)
+                .Take(take)
+                .Select(c => new CitySummary { CityId = c.CityId, Name = c.Name, CountryName = c.Country})
+                .ToListAsync(cancellationToken);
+        }
+      
         return await dbContext.Cities
             .AsNoTracking()
             .Where(c => EF.Functions.Like(c.Name, $"%{name}%"))
+            .OrderBy(c => c.Name)
+            .Skip(skip)
+            .Take(take)
             .Select(c => new CitySummary { CityId = c.CityId, Name = c.Name, CountryName = c.Country})
             .ToListAsync(cancellationToken);
     }
 
     public async Task<UpdateCityResult> UpdateCity(
-        Guid cityId,
+        int cityId,
         UpdateCityRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -158,7 +197,7 @@ public class CityService(
         };
     }
 
-    public async Task<DeleteCityResult> DeleteCity(Guid cityId, CancellationToken cancellationToken = default)
+    public async Task<DeleteCityResult> DeleteCity(int cityId, CancellationToken cancellationToken = default)
     {
         var city
             = await dbContext.Cities

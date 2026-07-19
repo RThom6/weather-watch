@@ -1,6 +1,6 @@
 namespace WeatherWatch.Application.Weather;
 
-public record CurrentWeather
+public record WeatherInfo
 {
     public required string Summary { get; init; }
     public required string Condition { get; init; }

@@ -28,13 +28,13 @@ public static class CityEndpoints
         })
         .WithName("FindCities");
         
-        app.MapGet("/cities/{cityId}/details", async (
-            Guid cityId,
+        app.MapGet("/cities/{cityId}/details/preview", async (
+            int cityId,
             ICityService cityService,
             CancellationToken cancellationToken
         ) =>
         {
-            var details = await cityService.GetCityDetails(cityId, cancellationToken);
+            var details = await cityService.GetCityDetailsPreview(cityId, cancellationToken);
             return details is not null ? Results.Ok(details) : Results.NotFound();
         })
         .WithName("GetCityDetails");
@@ -42,15 +42,22 @@ public static class CityEndpoints
         app.MapGet("/cities/search", async (
                 string name,
                 ICityService cityService,
-                CancellationToken cancellationToken) =>
-            {   
-                var results = await cityService.SearchCities(name, cancellationToken);
+                CancellationToken cancellationToken,
+                int page = 0,
+                int pageSize = 50
+                ) =>
+            {
+                page = Math.Max(0, page);
+                pageSize = Math.Clamp(pageSize, 1, 50); // maximum page size
+
+                var skip = page * pageSize;
+                var results = await cityService.SearchCities(name, skip, pageSize, cancellationToken);
                 return Results.Ok(results);
             })
             .WithName("SearchCities");
         
         app.MapPatch("/cities/{cityId}/update", async (
-            Guid cityId,
+            int cityId,
             UpdateCityRequest request,
             ICityService cityService,
             CancellationToken cancellationToken) =>
@@ -62,7 +69,7 @@ public static class CityEndpoints
         .WithName("UpdateCity");
         
         app.MapDelete("/cities/{cityId}", async (
-            Guid cityId,
+            int cityId,
             ICityService cityService,
             CancellationToken cancellationToken) =>
                 Results.Ok((object?)await cityService.DeleteCity(cityId, cancellationToken)))

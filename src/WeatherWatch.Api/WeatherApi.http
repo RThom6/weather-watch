@@ -21,28 +21,28 @@ Content-Type: application/json
 
 ###
 
-GET {{WeatherApi_HostAddress}}/cities/78c85277-cc3e-4686-bbb6-00810f4d5bec/details
+GET {{WeatherApi_HostAddress}}/cities/3/details
 Accept: application/json
 
 ###
 
-GET {{WeatherApi_HostAddress}}/cities/search?name=london
+GET {{WeatherApi_HostAddress}}/cities/search?name=london&pageSize=4&page=0
 Accept: application/json
 
 ###
 
-PATCH {{WeatherApi_HostAddress}}/cities/78c85277-cc3e-4686-bbb6-00810f4d5bec/update
+PATCH {{WeatherApi_HostAddress}}/cities/3/update
 Content-Type: application/json
 
 {
     "touristRating": 4.6,
-    "dateEstablished": "2026-06-17",
-    "estimatedPopulation": 12
+    "dateEstablished": "2026-11-17",
+    "estimatedPopulation": 1243214326
 }
 
 ### 
 
-DELETE {{WeatherApi_HostAddress}}/cities/B5130179-0F4F-428C-B1BC-37195F386300
+DELETE {{WeatherApi_HostAddress}}/cities/3
 Accept: application/json
 
 ###
