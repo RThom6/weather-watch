@@ -93,3 +93,5 @@ test-results
 src/WeatherWatch.Api/appsettings.Development.json
 
 **/WeatherWatch.Api/citywatch.db*
+
+notes.md
