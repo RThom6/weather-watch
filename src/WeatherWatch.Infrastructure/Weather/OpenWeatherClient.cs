@@ -25,6 +25,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         return new CurrentWeather 
         {
             Summary = response.Weather?.FirstOrDefault()?.Description ?? "",
+            Condition = response.Weather?.FirstOrDefault()?.Main ?? "",
             TemperatureCelsius = response.Main?.Temp ?? 0,
             FeelsLikeCelsius = response.Main?.FeelsLike ?? 0,
             Humidity = response.Main?.Humidity ?? 0,

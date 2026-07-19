@@ -33,7 +33,6 @@ public class CityService(
             {
                 CityId = Guid.NewGuid(),
                 Name = request.Name,
-                State = request.State,
                 Country = countryInfo.Name,
                 CountryCode = countryInfo.IsoCode,
                 CurrencyCode = countryInfo.CurrencyCode,
@@ -61,8 +60,6 @@ public class CityService(
                         Name = capital.Name,
                         Country = country.Name,
                         CountryCode = country.IsoCode,
-                        // No state/region in the RestCountries capitals data; capitals carry none.
-                        State = ""
                     }))
                 .ToList()
         };
@@ -86,7 +83,6 @@ public class CityService(
         {
             CityId = city.CityId,
             Name = city.Name,
-            State = city.State,
             Country = city.Country,
             CountryCode = city.CountryCode,
             CurrencyCode = city.CurrencyCode,

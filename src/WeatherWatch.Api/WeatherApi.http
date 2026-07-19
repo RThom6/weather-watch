@@ -16,8 +16,6 @@ Content-Type: application/json
 
 {
   "name": "London",
-  "state": "England",
-  "country": "United Kingdom",
   "countryCode": "826"
 }
 
