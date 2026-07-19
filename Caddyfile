@@ -1,0 +1,9 @@
+:8080 {
+	# API calls: strip the /api prefix and forward to the backend.
+	handle_path /api/* {
+		reverse_proxy backend:8080
+	}
+
+	# Everything else: the SvelteKit app.
+	reverse_proxy frontend:3000
+}

@@ -4,19 +4,19 @@ namespace WeatherWatch.Infrastructure.Cities.Dtos;
 
 // Relevant info from https://restcountries.com/docs/countries api response
 // Can extend to capture more of the return info
-public record CountryResponseDto
+internal sealed record CountryResponseDto
 {
     [JsonPropertyName("data")]
     public CountryDataDto? Data { get; init; }
 }
   
-public record CountryDataDto
+internal sealed record CountryDataDto
 {
     [JsonPropertyName("objects")]
     public IReadOnlyList<CountryObjectDto>? Objects { get; init; } = [];
 }
 
-public record CountryObjectDto
+internal sealed record CountryObjectDto
 {
     [JsonPropertyName("names")]
     public CountryNamesDto? Names { get; init; }
@@ -34,13 +34,13 @@ public record CountryObjectDto
     public IReadOnlyList<CapitalDto> Capitals { get; init; } = [];
 }
 
-public record CountryNamesDto
+internal sealed record CountryNamesDto
 {
     [JsonPropertyName("common")]
     public string? Common { get; init; }
 }
 
-public record CapitalDto
+internal sealed record CapitalDto
 {
     [JsonPropertyName("coordinates")]
     public CoordinateDto? Coordinates { get; init; }
@@ -49,7 +49,7 @@ public record CapitalDto
     public string? Name { get; init; }
 }
 
-public record CoordinateDto
+internal sealed record CoordinateDto
 {
     [JsonPropertyName("lat")]
     public double Latitude { get; init; }
@@ -57,13 +57,13 @@ public record CoordinateDto
     public double Longitude { get; init; }
 }
 
-public record CountryCodesDto
+internal sealed record CountryCodesDto
 {
     [JsonPropertyName("ccn3")]
     public string? Ccn3 { get; init; }
 }
 
-public record CurrencyDto
+internal sealed record CurrencyDto
 {
     [JsonPropertyName("code")]
     public string? Code { get; init; }

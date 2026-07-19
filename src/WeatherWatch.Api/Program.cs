@@ -18,10 +18,14 @@ public class Program
 
         builder.Services.AddInfrastructure(builder.Configuration);
         
+        var allowedOrigins = builder.Configuration.GetValue<string>("Cors:AllowedOrigins")
+            ?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            ?? ["http://localhost:5173"];
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
-                policy.WithOrigins("http://localhost:5173")
+                policy.WithOrigins(allowedOrigins)
                     .AllowAnyMethod()
                     .AllowAnyHeader());
         });
