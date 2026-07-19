@@ -43,7 +43,6 @@ public class Program
         app.UseAuthorization();
         app.UseCors("Frontend");
 
-        app.MapWeatherEndpoints();
         app.MapCityEndpoints();
 
         app.Run();
