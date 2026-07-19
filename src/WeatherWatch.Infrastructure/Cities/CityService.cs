@@ -80,6 +80,12 @@ public class CityService(
                 city.Longitude,
                 cancellationToken: cancellationToken);
 
+        var currentWeather
+            = await weatherService.GetCurrentWeatherByCoordinates(
+                city.Latitude,
+                city.Longitude,
+                cancellationToken: cancellationToken);
+
         return new CityDetails
         {
             CityId = city.CityId,
@@ -90,7 +96,8 @@ public class CityService(
             EstimatedPopulation = city.EstimatedPopulation,
             TouristRating = city.TouristRating,
             DateEstablished = city.DateEstablished,
-            Forecast = forecasts
+            Forecast = forecasts,
+            CurrentWeather = currentWeather
         };
     }
 

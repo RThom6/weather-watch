@@ -13,4 +13,5 @@ public record CityDetails
     public decimal? TouristRating { get; init; }
     public DateOnly? DateEstablished { get; init; }
     public IReadOnlyList<DailyForecast> Forecast { get; init; }
+    public WeatherInfo CurrentWeather { get; init; }
 }
