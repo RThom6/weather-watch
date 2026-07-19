@@ -4,8 +4,21 @@ export interface CitySummary {
   countryName: string;
 }
 
+// Result of the external /cities/find lookup (not-yet-created cities).
+export interface FoundCity {
+  name: string;
+  country: string;
+  state: string;
+  countryCode: string;
+}
+
+export interface FindCitiesResult {
+  cities: FoundCity[];
+}
+
 export interface CurrentWeather {
   summary: string;
+  condition: string;
   temperatureCelsius: number;
   feelsLikeCelsius: number;
   humidity: number;
@@ -18,15 +31,13 @@ export interface CityDetails {
   countryCode: string;
   name: string;
   state: string;
-  countryName: string;
+  country: string;
   currencyCode: string | undefined;
   currentWeather: CurrentWeather;
 }
 
 export interface CreateCityRequest {
   name: string;
-  state: string;
-  country: string;
   countryCode: string;
 }
 
@@ -46,4 +57,9 @@ export interface UpdateCityResult {
   isSuccess: boolean;
   errorMessage: string | null;
   cityId: string;
+}
+
+export interface DeleteCityResult {
+  isSuccess: boolean;
+  errorMessage: string | null;
 }
