@@ -1,4 +1,4 @@
-# ---- Build stage ----
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
@@ -12,7 +12,7 @@ RUN dotnet restore WeatherWatch.Api/WeatherWatch.Api.csproj
 COPY src/ ./
 RUN dotnet publish WeatherWatch.Api/WeatherWatch.Api.csproj -c Release -o /app/publish --no-restore
 
-# ---- Runtime stage ----
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
