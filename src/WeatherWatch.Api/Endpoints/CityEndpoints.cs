@@ -17,6 +17,17 @@ public static class CityEndpoints
             })
             .WithName("CreateCity");
         
+        app.MapGet("/cities/find", async (
+            string name,
+            ICityService cityService,
+            CancellationToken cancellationToken
+        ) =>
+        {
+            var result = await cityService.FindCitiesByName(name, cancellationToken);
+            return Results.Ok(result);
+        })
+        .WithName("FindCities");
+        
         app.MapGet("/cities/{cityId}/details", async (
             Guid cityId,
             ICityService cityService,

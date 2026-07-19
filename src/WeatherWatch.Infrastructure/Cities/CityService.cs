@@ -47,6 +47,27 @@ public class CityService(
         return new CreateCityResult { IsSuccess = true, CityId = city.CityId };
     }
 
+    public async Task<FindCitiesResult> FindCitiesByName(string name,
+        CancellationToken cancellationToken = default)
+    {
+        var countries = await countryLookupClient.GetCitiesByName(name, cancellationToken);
+        
+        return new FindCitiesResult
+        {
+            Cities = countries
+                .SelectMany(country => country.Capitals
+                    .Select(capital => new SimpleCityInfo
+                    {
+                        Name = capital.Name,
+                        Country = country.Name,
+                        CountryCode = country.IsoCode,
+                        // No state/region in the RestCountries capitals data; capitals carry none.
+                        State = ""
+                    }))
+                .ToList()
+        };
+    }
+
     public async Task<CityDetails?> GetCityDetails(Guid cityId, CancellationToken cancellationToken = default)
     {
         var city
