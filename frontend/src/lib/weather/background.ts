@@ -3,6 +3,7 @@
 //
 // Supports every possible weather condition in the OpenWeather API. You can add
 // or delete options. There are 2 variants for "Clear" and "Clouds" for night.
+// Backgrounds from: https://github.com/ondersumer07/weatherCard/tree/master
 export function weatherBackground(condition: string, hour: number): string {
   const isCloudy =
     condition == 'Clouds' ||

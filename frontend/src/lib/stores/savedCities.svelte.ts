@@ -7,6 +7,7 @@ export interface SavedCity {
 
 const STORAGE_KEY = 'saved-cities';
 
+// TODO: buggy behaviour if data gets removed outside of the FE
 function read(): SavedCity[] {
   if (!browser) return [];
   try {
