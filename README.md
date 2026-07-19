@@ -115,3 +115,8 @@ E2E_BASE_URL=http://localhost:8080 npx playwright test --ui
 | `npm run test:e2e` | `frontend` | Run the Playwright suite headless |
 | `npx playwright test --ui` | `frontend` | Run the Playwright suite in UI mode |
 | `docker compose up --build` | repo root | Run the whole stack in Docker |
+
+
+## Acknowledgements
+
+The Weather backgrounds were sourced from ondersumer077's weatherCard repo: <https://github.com/ondersumer07/weatherCard/tree/master>
