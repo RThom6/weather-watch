@@ -55,7 +55,7 @@
   }
 </script>
 
-<div class="p-6">
+<div class="mx-auto max-w-2xl p-6">
   <a href={resolve('/')} class="text-sm text-blue-600 hover:underline">← Back</a>
   <h1 class="mb-4 mt-2 text-2xl font-bold">Create a city</h1>
 

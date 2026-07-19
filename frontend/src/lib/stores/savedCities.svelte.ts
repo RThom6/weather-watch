@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 
 export interface SavedCity {
-  cityId: string;
+  cityId: number;
   name: string;
 }
 
@@ -30,7 +30,7 @@ class SavedCitiesStore {
     write(this.cities);
   }
 
-  remove(cityId: string) {
+  remove(cityId: number) {
     this.cities = this.cities.filter((c) => c.cityId !== cityId);
     write(this.cities);
   }

@@ -1,64 +1,124 @@
+<script module lang="ts">
+  // A single shared document listener for all cards' outside-click handling,
+  // instead of one listener per card. Handlers register/unregister per instance.
+  const outsideHandlers = new SvelteSet<(e: MouseEvent) => void>();
+  let listenerAttached = false;
+
+  function ensureListener() {
+    if (listenerAttached || typeof document === 'undefined') return;
+    document.addEventListener('click', (e) => outsideHandlers.forEach((h) => h(e)), true);
+    listenerAttached = true;
+  }
+</script>
+
 <script lang="ts">
   import { resolve } from '$app/paths';
   import type { CityDetails } from '$lib/api/types';
+  import { weatherBackground } from '$lib/weather/background';
+	import { SvelteSet } from 'svelte/reactivity';
 
-  let { city }: { city: CityDetails } = $props();
+  let {
+    city,
+    onRemove,
+    onDelete
+  }: {
+    city: CityDetails;
+    onRemove?: () => void;
+    onDelete?: () => void;
+  } = $props();
+
+  let menuOpen = $state(false);
+
+  // Close the menu when clicking anywhere outside it, via the shared listener.
+  function closeOnOutside(node: HTMLElement) {
+    ensureListener();
+    const handle = (event: MouseEvent) => {
+      if (menuOpen && !node.contains(event.target as Node)) menuOpen = false;
+    };
+    outsideHandlers.add(handle);
+    return {
+      destroy() {
+        outsideHandlers.delete(handle);
+      }
+    };
+  }
 
   // `summary` is the human-readable text ("broken clouds"); `condition` is the
   // OpenWeather "main" bucket ("Clouds") used to pick the background.
-  const weatherState = $derived(city.currentWeather.summary);
-  const condition = $derived(city.currentWeather.condition);
-  const degreesCelcius = $derived(Math.round(city.currentWeather.temperatureCelsius));
+  const weatherState = $derived(city.currentWeather?.summary ?? '');
+  const condition = $derived(city.currentWeather?.condition ?? '');
+  const degreesCelcius = $derived(Math.round(city.currentWeather?.temperatureCelsius ?? 0));
 
   // Day/night from the viewer's local hour. The city's own timezone isn't on
   // CityDetails yet, so this uses the browser's clock for now.
   const currentHour = new Date().getHours();
 
-  // Create and decide on background URL. It supports every possible weather condition in Open Weather API. You can add or delete options. There are 2 variants for "Clear" and "Clouds" for night times.
-  const backgroundUrl = $derived.by(() => {
-    const isCloudy =
-      condition == 'Clouds' ||
-      condition == 'Mist' ||
-      condition == 'Smoke' ||
-      condition == 'Haze' ||
-      condition == 'Dust' ||
-      condition == 'Fog' ||
-      condition == 'Sand' ||
-      condition == 'Ash' ||
-      condition == 'Squall';
-    const isDaytime = 7 < currentHour && currentHour < 20;
-
-    if (condition == 'Clear' && isDaytime) {
-      return "bg-[url('/weatherBg/sunny-animated.svg')]";
-    } else if (condition == 'Clear') {
-      return "bg-[url('/weatherBg/night-animated.svg')]";
-    } else if (isCloudy && isDaytime) {
-      return "bg-[url('/weatherBg/cloudy-animated.svg')]";
-    } else if (isCloudy) {
-      return "bg-[url('/weatherBg/cloudy-night-animated.svg')]";
-    } else if (condition == 'Rain' || condition == 'Tornado' || condition == 'Drizzle') {
-      return "bg-[url('/weatherBg/rainy-animated.svg')]";
-    } else if (condition == 'Thunderstorm') {
-      return "bg-[url('/weatherBg/thunderstorm-animated.svg')]";
-    } else if (condition == 'Snow') {
-      return "bg-[url('/weatherBg/snowy-animated.svg')]";
-    }
-    return "bg-[url('/weatherBg/sunny-animated.svg')]";
-  });
+  const backgroundUrl = $derived(weatherBackground(condition, currentHour));
 </script>
 
-<a
-  href={resolve('/cities/[id]', { id: city.cityId })}
-  class="m-4 block w-full overflow-hidden rounded-lg shadow transition-shadow hover:shadow-lg md:w-auto md:min-w-87.5"
+<div
+  class="relative m-4 w-full overflow-hidden rounded-lg shadow transition-shadow hover:shadow-lg md:w-auto md:min-w-87.5"
 >
-  <!-- Weather background header -->
-  <div class="{backgroundUrl} bg-cover bg-no-repeat px-6 py-8 text-white">
-    <p class="text-lg font-semibold">{weatherState}</p>
-    <p class="text-5xl font-bold">{degreesCelcius}°C</p>
-  </div>
+  <!-- Actions menu (siblings of the link so they aren't nested in an <a>) -->
+  {#if onRemove || onDelete}
+    <div class="absolute right-2 top-2 z-10" use:closeOnOutside>
+      <button
+        type="button"
+        aria-label="City actions"
+        aria-haspopup="menu"
+        aria-expanded={menuOpen}
+        class="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-gray-700 hover:bg-white"
+        onclick={() => (menuOpen = !menuOpen)}
+      >
+        ⋯
+      </button>
 
-  <div class="border-t p-4">
-    <h2 class="text-lg font-semibold">{city.name}</h2>
-    <p class="text-sm text-gray-500">{city.country}</p>
-  </div>
-</a>
+      {#if menuOpen}
+        <div
+          role="menu"
+          class="absolute right-0 mt-1 w-40 overflow-hidden rounded-md border bg-white text-sm shadow-lg"
+        >
+          {#if onRemove}
+            <button
+              type="button"
+              role="menuitem"
+              class="block w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100"
+              onclick={() => {
+                menuOpen = false;
+                onRemove?.();
+              }}
+            >
+              Remove from homepage
+            </button>
+          {/if}
+          {#if onDelete}
+            <button
+              type="button"
+              role="menuitem"
+              class="block w-full px-3 py-2 text-left text-red-600 hover:bg-red-50"
+              onclick={() => {
+                menuOpen = false;
+                onDelete?.();
+              }}
+            >
+              Delete city
+            </button>
+          {/if}
+        </div>
+      {/if}
+    </div>
+  {/if}
+
+  <a href={resolve('/cities/[id]', { id: String(city.cityId) })} class="block">
+    <!-- Weather background header -->
+    <div class="{backgroundUrl} bg-cover bg-no-repeat px-6 py-8 text-white">
+      <p class="text-lg font-semibold">{weatherState}</p>
+      <p class="text-5xl font-bold">{degreesCelcius}°C</p>
+    </div>
+
+    <div class="border-t p-4">
+      <h2 class="text-lg font-semibold">{city.name}</h2>
+      <p class="text-sm text-gray-500">{city.country}</p>
+    </div>
+  </a>
+</div>

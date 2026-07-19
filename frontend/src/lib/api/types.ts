@@ -1,10 +1,9 @@
 export interface CitySummary {
-  cityId: string;
+  cityId: number;
   name: string;
   countryName: string;
 }
 
-// Result of the external /cities/find lookup (not-yet-created cities).
 export interface FoundCity {
   name: string;
   country: string;
@@ -23,17 +22,34 @@ export interface CurrentWeather {
   feelsLikeCelsius: number;
   humidity: number;
   windSpeed: number;
-  observedAt: string; // DateTimeOffset serializes as an ISO 8601 string
+  observedAt: string;
+}
+
+// A daily rollup of the 5-day / 3-hour forecast.
+export interface DailyForecast {
+  summary: string;
+  condition: string;
+  icon: string | null;
+  date: string; // DateOnly serializes as "YYYY-MM-DD"
+  minCelsius: number;
+  maxCelsius: number;
+  dayCelsius: number;
+  humidity: number;
+  windSpeed: number;
+  precipitationChance: number; // 0–1
 }
 
 export interface CityDetails {
-  cityId: string;
+  cityId: number;
   countryCode: string;
   name: string;
-  state: string;
   country: string;
   currencyCode: string | undefined;
-  currentWeather: CurrentWeather;
+  estimatedPopulation: number | null;
+  touristRating: number | null;
+  dateEstablished: string | null;
+  currentWeather?: CurrentWeather;
+  forecast: DailyForecast[];
 }
 
 export interface CreateCityRequest {
@@ -44,19 +60,19 @@ export interface CreateCityRequest {
 export interface CreateCityResult {
   isSuccess: boolean;
   errorMessage: string | null;
-  cityId: string;
+  cityId: number;
 }
 
 export interface UpdateCityRequest {
-  touristRating: number;
-  dateEstablished: Date;
-  estimatedPopulation: number;
+  touristRating: number | null;
+  dateEstablished: string | null; // "YYYY-MM-DD"
+  estimatedPopulation: number | null;
 }
 
 export interface UpdateCityResult {
   isSuccess: boolean;
   errorMessage: string | null;
-  cityId: string;
+  cityId: number;
 }
 
 export interface DeleteCityResult {
