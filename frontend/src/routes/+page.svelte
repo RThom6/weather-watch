@@ -9,12 +9,12 @@
   let loading = $state(false);
   let error = $state<string | null>(null);
 
-  // Remove from the homepage only (leaves the city in the database).
+  // Remove from the homepage only (leaves the city in the database)
   function removeFromHomepage(cityId: number) {
     savedCities.remove(cityId);
   }
 
-  // Delete the city entirely, then drop it from the homepage.
+  // Delete the city entirely, then drop it from the homepage
   async function deleteEntirely(city: CityDetails) {
     if (!confirm(`Delete ${city.name} permanently? This cannot be undone.`)) return;
     try {

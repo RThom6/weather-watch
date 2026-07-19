@@ -44,7 +44,8 @@
         createError = result.errorMessage ?? 'Create failed';
         return;
       }
-      // Save it so it shows on the home page, then go there.
+      // Save it so it shows on the home page, then go there
+      // Can be a bit annoying if creating a lot
       savedCities.add({ cityId: result.cityId, name: found.name });
       await goto(resolve('/'));
     } catch (err) {

@@ -8,7 +8,6 @@
 
   let { data }: { data: PageData } = $props();
 
-  // --- Homepage membership + delete ---
   const savedHere = $derived(savedCities.cities.some((c) => c.cityId === city.cityId));
   let deleteError = $state<string | null>(null);
 
@@ -34,12 +33,11 @@
     }
   }
 
-  // --- Edit updatable city facts (population, rating, established date) ---
+  // Edit updatable city facts (population, rating, established date)
   let editing = $state(false);
   let saving = $state(false);
   let saveError = $state<string | null>(null);
 
-  // Inputs are kept as strings; empty string means "leave unchanged".
   let populationInput = $state('');
   let ratingInput = $state('');
   let dateInput = $state('');
@@ -76,18 +74,19 @@
   }
 
   const city = $derived(data.city);
-  // Optional: the details endpoint may not include current weather.
   const weather = $derived(city.currentWeather);
   const temperature = $derived(weather ? Math.round(weather.temperatureCelsius) : 0);
   const feelsLike = $derived(weather ? Math.round(weather.feelsLikeCelsius) : 0);
 
   // Current hour in the city's own timezone, from the country's UTC offset.
+  // Might not be right in huge countries but since city = capital for now it should work
   const currentHour = $derived(
     new Date(Date.now() + city.utcOffsetSeconds * 1000).getUTCHours()
   );
   const backgroundUrl = $derived(weather ? weatherBackground(weather.condition, currentHour) : '');
 
-  // e.g. "Updated 3:42 PM"
+  // When it was last refreshed/polled, would be a bit more relevant if I added caching and maybe a
+  // specific reset button
   const observedAt = $derived(
     weather
       ? new Date(weather.observedAt).toLocaleTimeString(undefined, {
@@ -109,7 +108,6 @@
       : '—'
   );
 
-  // Guarded: the details endpoint may not serve the forecast yet.
   const forecast = $derived(city.forecast ?? []);
 
   function formatForecastDay(date: string) {
@@ -173,7 +171,7 @@
       </div>
     </div>
   {:else}
-    <!-- No current weather in this payload; show a plain title. -->
+    <!-- Incase detail doesn't return current weather -->
     <div class="mt-2">
       <h1 class="text-2xl font-bold">{city.name}</h1>
       <p class="text-sm text-gray-500">{city.country}</p>
@@ -277,7 +275,7 @@
     <h2 class="mt-6 text-lg font-semibold">5-day forecast</h2>
     <div class="mt-2 flex gap-3 overflow-x-auto pb-2">
       {#each forecast as day (day.date)}
-        <div class="flex w-24 flex-shrink-0 flex-col rounded-lg border p-3 text-center">
+        <div class="flex w-24 shrink-0 flex-col rounded-lg border p-3 text-center">
           <p class="text-xs font-medium text-gray-500">{formatForecastDay(day.date)}</p>
           <p class="mt-1 text-xs capitalize text-gray-600">{day.summary}</p>
           <div class="mt-auto pt-2">
@@ -286,7 +284,7 @@
             {/if}
             <p class="text-sm font-semibold">
               {Math.round(day.maxCelsius)}°<span class="text-gray-400"
-                >/{Math.round(day.minCelsius)}°</span
+                >/{Math.round(day.minCelsius)}°C</span
               >
             </p>
           </div>

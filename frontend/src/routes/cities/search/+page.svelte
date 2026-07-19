@@ -14,7 +14,8 @@
   let error = $state<string | null>(null);
   let hasMore = $state(false);
 
-  // Guards against out-of-order responses when typing quickly.
+  // make sure we know the order of the requests
+  // helpful when making a bunch with search imo
   let requestId = 0;
 
   async function load(reset: boolean) {
