@@ -3,8 +3,7 @@ using System.Text.Json.Serialization;
 namespace WeatherWatch.Infrastructure.Weather.Dtos;
 
 /// <summary>
-/// Dto for OpenWeatherApi's 5 day / 3 hour forecast Api. Each list entry is a
-/// point-in-time reading every 3 hours; callers roll these up into daily summaries.
+/// Dto for OpenWeatherApi's 5 day / 3 hour forecast Api
 /// https://openweathermap.org/api/forecast5?collection=current_forecast
 /// </summary>
 internal sealed record ForecastResponseDto
@@ -34,7 +33,7 @@ internal sealed record ForecastEntryDto
     public int Visibility { get; init; }
 
     [JsonPropertyName("pop")]
-    public double Pop { get; init; }
+    public double Pop { get; init; } // probability of precipitation
 
     [JsonPropertyName("rain")]
     public ForecastPrecipitationDto? Rain { get; init; }

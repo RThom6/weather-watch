@@ -46,7 +46,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
         var response = await httpClient.GetFromJsonAsync<ForecastResponseDto>(uri, cancellationToken)
                        ?? throw new InvalidOperationException("OpenWeather returned an empty response");
 
-        // The endpoint returns a reading every 3 hours; roll them up into one summary per day.
+        // The endpoint returns a reading every 3 hours, we just want one per day
         return (response.List ?? [])
             .GroupBy(entry => DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(entry.Dt).UtcDateTime))
             .OrderBy(day => day.Key)
@@ -56,7 +56,7 @@ internal sealed class OpenWeatherClient(HttpClient httpClient, IOptions<OpenWeat
 
     private static DailyForecast ToDailyForecast(IGrouping<DateOnly, ForecastEntryDto> day)
     {
-        // Use the reading nearest midday as the representative condition for the day.
+        // Use the reading nearest midday as the condition for the day.
         var midday = day
             .OrderBy(entry => Math.Abs(DateTimeOffset.FromUnixTimeSeconds(entry.Dt).UtcDateTime.Hour - 12))
             .First();
