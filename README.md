@@ -65,8 +65,7 @@ Open <http://localhost:8080>.
 
 Notes:
 
-- The backend reads its keys from `appsettings.Development.json` (baked into the image),
-  so no separate `.env` is required.
+- The backend reads its keys from `appsettings.Development.json` (baked into the image)
 - The database lives in the `city-db` volume and starts empty — add cities via the
   **Create** page.
 - Caddy routes `/api/*` to the backend and everything else to the frontend, so the
@@ -74,7 +73,7 @@ Notes:
 
 ## Running the end-to-end tests
 
-The Playwright suite lives in `frontend/e2e`. Tests are self-contained — each creates and
+The Playwright suite lives in `frontend/e2e`. Tests are self-contained. Each one creates and
 deletes the data it needs via the API — so they run against any environment.
 
 ```bash
