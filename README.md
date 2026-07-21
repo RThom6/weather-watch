@@ -1,3 +1,4 @@
+-- playwright tests not working when I repulled the repo, will look into this
 # Weather Watch
 
 A small weather app for Seiko takehome test a .NET API that wraps OpenWeather + RestCountries, and a SvelteKit
